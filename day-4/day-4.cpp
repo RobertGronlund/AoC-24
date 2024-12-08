@@ -24,7 +24,7 @@ bool is_within_bounds(int x, int y, int rows, int cols) {
     return x >= 0 && x < rows && y >= 0 && y < cols;
 }
 
-int search_word(vector<string>& grid, const string& word) {
+int find_xmas(vector<string>& grid, const string& word) {
     int rows = grid.size();
     int cols = grid[0].size();
     int count = 0;
@@ -56,11 +56,41 @@ int search_word(vector<string>& grid, const string& word) {
     return count;
 }
 
+int find_x_mas(vector<string>& grid, const string& word) {
+    int rows = grid.size();
+    int cols = grid[0].size();
+    int count = 0;
+    int word_len = word.size();
+
+    int directions[4][2] = {
+        {1, 1}, {-1, 1}, // down-right, up-right
+        {-1, -1}, {1, -1} // up-left, down-left
+    };
+
+    // Start on 1 to not go out of bounds
+    for (int x = 1; x < rows-1; ++x) {
+        for (int y = 1; y < cols-1; ++y) {
+            if (grid[x][y] == word[1]) {
+                if ((grid[x+1][y+1] == word[0] && grid[x-1][y-1] == word[2]) || (grid[x+1][y+1] == word[2] && grid[x-1][y-1] == word[0])) {
+                    if ((grid[x+1][y-1] == word[0] && grid[x-1][y+1] == word[2]) || (grid[x+1][y-1] == word[2] && grid[x-1][y+1] == word[0])) {
+                        count++;
+                    }
+                }
+            }
+        }
+    }
+    return count;
+}
+
 int main() {
     vector<string> input = input_reader();
-    string word = "XMAS"; // Example word to search for
+    string word = "XMAS";
 
-    int count = search_word(input, word);
+    int count = find_xmas(input, word);
+    cout << "The word '" << word << "' was found " << count << " times in the grid." << endl;
+
+    word = "MAS";
+    count = find_x_mas(input, word);
     cout << "The word '" << word << "' was found " << count << " times in the grid." << endl;
 
     return 0;
